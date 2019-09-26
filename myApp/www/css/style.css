@@ -1,1 +1,38 @@
 /* Empty. Add your own CSS if you like */
+#sudokuTable{
+    border: 3px solid black;
+    width: 50%;
+    height: 50%;
+}
+#sudokuTable tr:nth-child(3n){
+    border-bottom: 2px solid grey;
+}
+#sudokuTable td:nth-child(3n){
+    border-right: 2px solid grey;
+}
+#sudokuTable td{
+    /* position: relative; */
+    width: 50px!important;
+    height: 50px!important;
+    /* max-width: 40px; */
+    /* height: 5%;
+    max-height: 40px; */
+    text-align: center;
+    padding-bottom: 0%;
+}
+
+/* #sudokuTable td::after{
+    display: block;
+    margin-top: 100%;
+} */
+#sudokuTable td{
+    border: 1px dotted grey;
+}
+
+#sudokuTable input{
+    width: 100%;
+    height: 100%;
+    /* line-height: 100%; */
+    padding-bottom: 0%;
+    text-align: center;
+}
