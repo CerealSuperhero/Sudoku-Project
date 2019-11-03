@@ -3,13 +3,13 @@
 </ion-view>
 <p>"it's not dead</p> -->
 
-<ion-view view-title="Sudoku">
+<!-- <ion-view view-title="Sudoku">
     <ion-content>
         <p>"it's alive</p>
 
-        <table id="sudokuTable">
+         <table id="sudokuTable">
             <tr ng-repeat="n in [1,2,3,4,5,6,7,8,9]">
-                <td  ng-repeat="n in [1,2,3,4,5,6,7,8,9]">
+                <td ng-repeat="n in [1,2,3,4,5,6,7,8,9]">
                     <input class="sudokuInput" id="a{{$parent.$index}}_{{$index}}">
                 </td>
             </tr>
@@ -158,5 +158,10 @@
 
 
         </table>
+    </ion-content>
+</ion-view> -->
+<ion-view view-title="Sudoku">
+    <ion-content>
+        <canvas id="myCanvas" width="900" height="900" style="border:1px solid #d3d3d3;"></canvas>
     </ion-content>
 </ion-view>
