@@ -74,16 +74,20 @@ angular.module('starter', ['ionic', 'starter.controllers','sudoku'])
   })
   
   .state('app.sudoku', {
+    cache: 'false',
     url: '/sudoku',
+    templateUrl: 'templates/sudoku.html',
     /* templateUrl: 'templates/sudoku.html',
         controller: 'sudokucontroller as vm', */
     views: {
       'menuContent': {
         templateUrl: 'templates/sudoku.html',
-        controller: 'sudokucontroller as vm'
+        //controller: 'sudokucontroller as vm'
+        
         //controller: 'js/sudoku/sudokucontroller.js'
       }
-    }
+    },
+    controller: 'sudokucontroller as vm'
   });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/playlists');
