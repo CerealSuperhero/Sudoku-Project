@@ -72,7 +72,7 @@ function init() {
     fillDoku();
     printDouku(dummydoku);
     //console.table(dummydoku);
-    clearCells(51, dummydoku);
+    clearCells(20, dummydoku);
     console.time("delcheck");
     deleteCheck(dummydoku, cellsToClear);
     console.timeEnd("delcheck");
@@ -297,7 +297,7 @@ var generatedDoku;
 function recursiveDelCheck(checkDoku, checkPosition) {
     if (checkPosition >= cellsToClear.length) {
         console.error("checking empty in checkposition");
-        return false;
+        return ;
     } else {
         var delCheckCell = cellsToClear[checkPosition];
         //for (var i = 0; i <= checkDoku[delCheckCell].toTry.length; i++) {
@@ -313,7 +313,8 @@ function recursiveDelCheck(checkDoku, checkPosition) {
                     //console.groupEnd();
                     //printDouku(dummydoku);
                     //console.timeStamp
-                    return true;
+                    //return true;
+                    break;
                 }else{
                     /* if(recursiveDelCheck(checkDoku,checkPosition+1,solves)){
                         return true;
@@ -327,7 +328,7 @@ function recursiveDelCheck(checkDoku, checkPosition) {
             //console.count("trying 1");
         }
         //checkDoku[delCheckCell].value=-10;
-        return false;
+        return ;
     }
 }
 
