@@ -34,8 +34,8 @@
     var ctx;
 
     var gridSquares = {
-        "Square1": { "gridNumber": 1, "points": [{ "x": 0, "y": 2 }, { "x": 100, "y": 2 }, { "x": 100, "y": 100 }, { "x": 0, "y": 100 }], "currentValue": 1, "CorrectValue": 9 },
-        "Square2": { "gridNumber": 5, "points": [{ "x": 100, "y": 100 }, { "x": 200, "y": 100 }, { "x": 200, "y": 200 }, { "x": 100, "y": 200 }], "currentValue": 1, "CorrectValue": 9 },
+        "Square1": { "gridNumber": 1, "points": [{ "x": 0, "y": 2 }, { "x": 100, "y": 2 }, { "x": 100, "y": 100 }, { "x": 0, "y": 100 }], "currentValue": 1, "CorrectValue": 9, "hilighted":false },
+        "Square2": { "gridNumber": 5, "points": [{ "x": 100, "y": 100 }, { "x": 200, "y": 100 }, { "x": 200, "y": 200 }, { "x": 100, "y": 200 }], "currentValue": 1, "CorrectValue": 9 ,"hilighted":false },
     }
 
     function hilightSquare(gridSquare) {
@@ -186,11 +186,22 @@
         
         if (mouseX<300) {
             hilightSquare(gridSquares.Square1);
+            
         } else{
             clearSquare(gridSquares.Square1);
+            
         }
+        draw()
         
 
+    }
+
+    function draw(){
+        initCanvas()
+        gridSquares.forEach(square => {
+            //if(square.) is hilighted draw hilight
+        });
+        //do numbers
     }
 
 
