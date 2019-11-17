@@ -336,6 +336,12 @@
             toggleHilight(clickedSquare);
         }
         //toggleHilight(getSquare(mouseX,mouseY));
+        
+        gridSquares.forEach(square => {
+            if ((square.hilighted==true)&&(square!=clickedSquare)) {
+                square.hilighted=false;
+            }
+        });
 
         draw()
         
