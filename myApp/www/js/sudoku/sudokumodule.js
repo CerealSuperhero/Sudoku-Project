@@ -2,12 +2,14 @@
 	'use strict';
 
 	angular
-		.module('sudoku', [])
+        .module('sudoku', [])
+        //.controller( 'sudokucontroller as vm')
         .config(function($stateProvider) {
             $stateProvider
             
             
                 
             });
+        
 				
 })();

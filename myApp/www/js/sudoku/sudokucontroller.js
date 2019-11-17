@@ -6,15 +6,33 @@
         .controller('sudokucontroller', control);
 
     control.$inject = [
-
+        '$state',
+        '$scope',
+        '$rootScope'
     ];
+    var vm=[];
+    
 
     function control(
-
+        $state,
+        $scope,
+        $rootScope
+        
     ) {
         var vm = angular.extend(this, {
-
+            aaa:"AAA"
         });
+
+        vm.working="aaaaa";
+        $scope.workingg="bb";
+
+        vm.test=function(){
+            //console.log("aaaaaaaaa");
+            //alert("test");
+            ctx.font= "30px Arial";
+            ctx.fillText("1",50,50);
+            console.log(gridSquares);
+        }
 
         console.log("ALIVE");
 
@@ -26,6 +44,8 @@
     }
 
     function init() {
+        
+        
 
         /* for (var i = 0; i<20;i++){
             outPut[i]="top Left= "+ w[wcount] + ", " + h[hcount];
@@ -33,19 +53,59 @@
             console.log(outPut[i]);
           } */
 
+            /* var w=[0,100,200,300,400,500,600,700,800,900];
+            var h = [0,100,200,300,400,500,600,700,800,900];
+            var hcount=0;
+            var wcount=0;
+            var outPut = [];
+            var gridSquares=[]; */
+
+          for (var i = 0; i<81;i++){
+            outPut[i]="top Left= "+ w[wcount] + ", " + h[hcount];
+            
+            console.log(outPut[i]);
+            gridSquares[i]={"gridNumber": 5,"tl":[w[wcount],h[hcount]], "currentValue": emptysudoku[i], "CorrectValue": filledSudokku[i] ,"hilighted":false }
+            /* gridSquares[
+            {"gridNumber": 5,"tl":[100,100],"x":[100,200], "y":[100,200], "currentValue": 0, "CorrectValue": 9 ,"hilighted":false }
+            ] */
+            console.table(gridSquares[i])
+            itCount();
+          }
+
         
 
 
 
-        startCanvas()
+        startCanvas();
+
+       
 
     }
+
+    function fillNumbers() {
+        ctx.font= "30px Arial";
+        ctx.fillStyle="black";
+        //ctx.fillText("5",40,60);
+        gridSquares.forEach(square => {
+            if (square.currentValue!=0) {
+                ctx.fillText(square.CorrectValue,square.tl[0]+40,square.tl[1]+60)
+            }
+            
+        });
+    }
+
+    var w = [0, 100, 200, 300, 400, 500, 600, 700, 800];
+    var h = [0, 100, 200, 300, 400, 500, 600, 700, 800];
+    var hcount = 0;
+    var wcount = 0;
+    var outPut = [];
+    var gridSquares = [];
 
     var emptysudoku=    "530070000600195000098000060800060003400803001700020006060000280000419005000080079";
     var filledSudokku=  "534678912672195348198342567859761423426853791713924856961537284287419635345286179";
 
     function itCount(){
-        if (wcount==9){
+        if (wcount==8){
           wcount=0;
           hcount++;
         }else{
@@ -60,12 +120,47 @@
         {"gridNumber": 5, "points": [{ "x": 100, "y": 100 }, { "x": 200, "y": 100 }, { "x": 200, "y": 200 }, { "x": 100, "y": 200 }], "currentValue": 1, "CorrectValue": 9 ,"hilighted":false },
     ] */
 
-    var gridSquares = [
-        {"gridNumber": 1,"x":[0,100], "y":[0,100], "points": [{ "x": 0, "y": 0 }, { "x": 100, "y": 0 }, { "x": 100, "y": 100 }, { "x": 0, "y": 100 }], "currentValue": 1, "CorrectValue": 9, "hilighted":false },
-        {"gridNumber": 5,"x":[100,200], "y":[100,200], "points": [{ "x": 100, "y": 100 }, { "x": 200, "y": 100 }, { "x": 200, "y": 200 }, { "x": 100, "y": 200 }], "currentValue": 1, "CorrectValue": 9 ,"hilighted":false },
-    ]
+/*     var gridSquares = [
+        {"gridNumber": 1,"tl":[0,0], "currentValue": 1, "CorrectValue": 9, "hilighted":false },
+        {"gridNumber": 5,"tl":[100,100],  "currentValue": 1, "CorrectValue": 9 ,"hilighted":false },
+    ]; */
+    var size=100;
 
     function hilightSquare(gridSquare) {
+        var points = [];
+/*          points[0]= { x:gridSquare.x[0], "y": gridSquare.y[0] }
+         points[1]= { x:gridSquare.x[1], "y": gridSquare.y[0] }
+         points[2]= { x:gridSquare.x[1], "y": gridSquare.y[1] }
+         points[3]= { x:gridSquare.x[0], "y": gridSquare.y[1] } */
+
+        var minX=gridSquare.tl[0];
+        var minY=gridSquare.tl[1];
+
+         points[0]= { x:minX, "y": minY }
+         points[1]= { x:minX+ size, "y": minY }
+         points[2]= { x:minX + size, "y":minY+size }
+         points[3]= { x:minX, "y": minY+size }
+
+
+
+
+        
+        ctx.fillStyle = "skyblue";
+        ctx.strokeStyle = "black";
+        ctx.lineWidth=1;
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        for (var i = 1; i < points.length; i++) {
+            ctx.lineTo(points[i].x, points[i].y);
+        }
+        ctx.lineTo(points[0].x, points[0].y);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.closePath();
+    }
+
+/*     function hilightSquare(gridSquare) {
         var points = gridSquare.points;
          points[0]= { x:gridSquare.x[0], "y": gridSquare.y[0] }
          points[1]= { x:gridSquare.x[1], "y": gridSquare.y[0] }
@@ -84,10 +179,20 @@
         ctx.stroke();
 
         ctx.closePath();
-    }
+    } */
 
     function clearSquare(gridSquare) {
-        var points = gridSquare.points;
+        var points = [];
+
+        var minX=gridSquare.tl[0];
+        var minY=gridSquare.tl[1];
+
+         points[0]= { x:minX, "y": minY }
+         points[1]= { x:minX+ size, "y": minY }
+         points[2]= { x:minX + size, "y":minY+size }
+         points[3]= { x:minX, "y": minY+size }
+
+
         ctx.fillStyle = "white";
         ctx.strokeStyle = "black";
         ctx.lineWidth=1;
@@ -156,6 +261,8 @@
                 canvas = document.getElementById("myCanvas");
                 ctx = canvas.getContext("2d");
 
+                
+
                 initCanvas();
             }
 
@@ -169,7 +276,7 @@
 
     function initCanvas() {
         var c = document.getElementById("myCanvas");
-        var ctx = c.getContext("2d");
+        ctx = c.getContext("2d");
 
         ctx.beginPath();
         for (var i = 0; i < 10; i++) {
@@ -199,6 +306,7 @@
             ctx.stroke();
         }
         ctx.closePath();
+        fillNumbers();
     }
 
     // document.getElementById("myCanvas").mousedown(function (e){
@@ -237,10 +345,17 @@
     function getSquare(x,y){
         var clickedSquare=null;
         gridSquares.forEach(square => {
-            var minX=square.x[0];
+/*             var minX=square.x[0];
             var maxX=square.x[1];
             var minY=square.y[0];
-            var maxY=square.y[1];
+            var maxY=square.y[1]; */
+
+            var minX=square.tl[0];
+            var minY=square.tl[1];
+            var maxX=square.tl[0]+size;
+            var maxY=square.tl[1]+size;
+
+
 
             if ((minX<x) && (x<maxX ) && (minY<y) && (y<maxY)) {
                 clickedSquare=square;
@@ -274,16 +389,20 @@
             }
         });
 
+        
+
         initCanvas();
 
-        
+        fillNumbers();
 
         //do numbers
     }
 
+    
 
-
+    
+    
     init()
-
+    //return vm;
 
 })();
