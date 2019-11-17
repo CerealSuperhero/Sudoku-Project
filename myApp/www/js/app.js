@@ -4,7 +4,10 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers','sudoku'])
+angular.module('starter', ['ionic', 'starter.controllers',
+'sudoku',
+'game.directive'
+])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -76,19 +79,32 @@ angular.module('starter', ['ionic', 'starter.controllers','sudoku'])
   .state('app.sudoku', {
     cache: 'false',
     url: '/sudoku',
-    templateUrl: 'templates/sudoku.html',
+    //templateUrl: 'templates/sudoku.html',
     /* templateUrl: 'templates/sudoku.html',
         controller: 'sudokucontroller as vm', */
     views: {
       'menuContent': {
         templateUrl: 'templates/sudoku.html',
+       /*  controller: 'sudokucontroller',
+        controllerAs: 'vm',
+        bindToController: true */
         //controller: 'sudokucontroller as vm'
         
         //controller: 'js/sudoku/sudokucontroller.js'
       }
     },
-    controller: 'sudokucontroller as vm'
+    /* controllerAs: 'vm',
+    bindToController: true */
+
   });
+
+
+
+
+
+
+
+
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/playlists');
 });
