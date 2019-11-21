@@ -64,7 +64,12 @@
             outPut[i]="top Left= "+ w[wcount] + ", " + h[hcount];
             
             console.log(outPut[i]);
-            gridSquares[i]={"gridNumber": 5,"tl":[w[wcount],h[hcount]], "currentValue": emptysudoku[i], "CorrectValue": filledSudokku[i] ,"hilighted":false }
+                if (emptysudoku[i]==0) {
+                    gridSquares[i]={"gridNumber": 5,"tl":[w[wcount],h[hcount]], "currentValue": emptysudoku[i], "CorrectValue": filledSudokku[i] ,"hilighted":false,"editable":false }
+                }else{
+                    gridSquares[i]={"gridNumber": 5,"tl":[w[wcount],h[hcount]], "currentValue": emptysudoku[i], "CorrectValue": filledSudokku[i] ,"hilighted":false,"editable":true }
+                }
+            
             /* gridSquares[
             {"gridNumber": 5,"tl":[100,100],"x":[100,200], "y":[100,200], "currentValue": 0, "CorrectValue": 9 ,"hilighted":false }
             ] */
@@ -93,7 +98,7 @@
             
         });
     }
-
+        //change to run off size
     var w = [0, 100, 200, 300, 400, 500, 600, 700, 800];
     var h = [0, 100, 200, 300, 400, 500, 600, 700, 800];
     var hcount = 0;
