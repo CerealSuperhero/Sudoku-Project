@@ -23,14 +23,14 @@
             aaa:"AAA"
         });
 
-        vm.working="aaaaa";
-        $scope.workingg="bb";
+        vm.working="print grid to console";
+        //$scope.workingg="print grid to console";
 
         vm.test=function(){
             //console.log("aaaaaaaaa");
             //alert("test");
-            ctx.font= "30px Arial";
-            ctx.fillText("1",50,50);
+            //ctx.font= "30px Arial";
+            //ctx.fillText("1",50,50);
             console.log(gridSquares);
         }
 
@@ -65,13 +65,13 @@
             
             console.log(outPut[i]);
                 if (emptysudoku[i]==0) {
-                    gridSquares[i]={"gridNumber": 5,"tl":[w[wcount],h[hcount]], "currentValue": emptysudoku[i], "CorrectValue": filledSudokku[i] ,"hilighted":false,"editable":false }
+                    gridSquares[i]={"gridNumber": 5,"tl":[w[wcount],h[hcount]], "currentValue": emptysudoku[i], "correctValue": filledSudokku[i] ,"highlighted":false,"editable":true }
                 }else{
-                    gridSquares[i]={"gridNumber": 5,"tl":[w[wcount],h[hcount]], "currentValue": emptysudoku[i], "CorrectValue": filledSudokku[i] ,"hilighted":false,"editable":true }
+                    gridSquares[i]={"gridNumber": 5,"tl":[w[wcount],h[hcount]], "currentValue": filledSudokku[i], "correctValue": filledSudokku[i] ,"highlighted":false,"editable":false }
                 }
             
             /* gridSquares[
-            {"gridNumber": 5,"tl":[100,100],"x":[100,200], "y":[100,200], "currentValue": 0, "CorrectValue": 9 ,"hilighted":false }
+            {"gridNumber": 5,"tl":[100,100],"x":[100,200], "y":[100,200], "currentValue": 0, "correctValue": 9 ,"highlighted":false }
             ] */
             console.table(gridSquares[i])
             itCount();
@@ -93,7 +93,7 @@
         //ctx.fillText("5",40,60);
         gridSquares.forEach(square => {
             if (square.currentValue!=0) {
-                ctx.fillText(square.CorrectValue,square.tl[0]+40,square.tl[1]+60)
+                ctx.fillText(square.currentValue,square.tl[0]+40,square.tl[1]+60)
             }
             
         });
@@ -121,48 +121,57 @@
     var ctx;
 
     /* var gridSquares = [
-        {"gridNumber": 1, "points": [{ "x": 0, "y": 2 }, { "x": 100, "y": 2 }, { "x": 100, "y": 100 }, { "x": 0, "y": 100 }], "currentValue": 1, "CorrectValue": 9, "hilighted":false },
-        {"gridNumber": 5, "points": [{ "x": 100, "y": 100 }, { "x": 200, "y": 100 }, { "x": 200, "y": 200 }, { "x": 100, "y": 200 }], "currentValue": 1, "CorrectValue": 9 ,"hilighted":false },
+        {"gridNumber": 1, "points": [{ "x": 0, "y": 2 }, { "x": 100, "y": 2 }, { "x": 100, "y": 100 }, { "x": 0, "y": 100 }], "currentValue": 1, "correctValue": 9, "highlighted":false },
+        {"gridNumber": 5, "points": [{ "x": 100, "y": 100 }, { "x": 200, "y": 100 }, { "x": 200, "y": 200 }, { "x": 100, "y": 200 }], "currentValue": 1, "correctValue": 9 ,"highlighted":false },
     ] */
 
 /*     var gridSquares = [
-        {"gridNumber": 1,"tl":[0,0], "currentValue": 1, "CorrectValue": 9, "hilighted":false },
-        {"gridNumber": 5,"tl":[100,100],  "currentValue": 1, "CorrectValue": 9 ,"hilighted":false },
+        {"gridNumber": 1,"tl":[0,0], "currentValue": 1, "correctValue": 9, "highlighted":false },
+        {"gridNumber": 5,"tl":[100,100],  "currentValue": 1, "correctValue": 9 ,"highlighted":false },
     ]; */
     var size=100;
 
     function hilightSquare(gridSquare) {
-        var points = [];
-/*          points[0]= { x:gridSquare.x[0], "y": gridSquare.y[0] }
-         points[1]= { x:gridSquare.x[1], "y": gridSquare.y[0] }
-         points[2]= { x:gridSquare.x[1], "y": gridSquare.y[1] }
-         points[3]= { x:gridSquare.x[0], "y": gridSquare.y[1] } */
 
-        var minX=gridSquare.tl[0];
-        var minY=gridSquare.tl[1];
-
-         points[0]= { x:minX, "y": minY }
-         points[1]= { x:minX+ size, "y": minY }
-         points[2]= { x:minX + size, "y":minY+size }
-         points[3]= { x:minX, "y": minY+size }
+        /* if (!gridSquare.editable) { */
 
 
 
 
-        
-        ctx.fillStyle = "skyblue";
-        ctx.strokeStyle = "black";
-        ctx.lineWidth=1;
-        ctx.beginPath();
-        ctx.moveTo(points[0].x, points[0].y);
-        for (var i = 1; i < points.length; i++) {
-            ctx.lineTo(points[i].x, points[i].y);
-        }
-        ctx.lineTo(points[0].x, points[0].y);
-        ctx.fill();
-        ctx.stroke();
+            var points = [];
+            /*          points[0]= { x:gridSquare.x[0], "y": gridSquare.y[0] }
+                     points[1]= { x:gridSquare.x[1], "y": gridSquare.y[0] }
+                     points[2]= { x:gridSquare.x[1], "y": gridSquare.y[1] }
+                     points[3]= { x:gridSquare.x[0], "y": gridSquare.y[1] } */
 
-        ctx.closePath();
+            var minX = gridSquare.tl[0];
+            var minY = gridSquare.tl[1];
+
+            points[0] = { x: minX, "y": minY }
+            points[1] = { x: minX + size, "y": minY }
+            points[2] = { x: minX + size, "y": minY + size }
+            points[3] = { x: minX, "y": minY + size }
+
+
+
+
+
+            ctx.fillStyle = "skyblue";
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(points[0].x, points[0].y);
+            for (var i = 1; i < points.length; i++) {
+                ctx.lineTo(points[i].x, points[i].y);
+            }
+            ctx.lineTo(points[0].x, points[0].y);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.closePath();
+        /* }else{
+            console.error("can't edit this square")
+        } */
     }
 
 /*     function hilightSquare(gridSquare) {
@@ -219,9 +228,9 @@
     ^^doesn't work, just stack 2 canvases with the background one for the grid and the foreground for numbers and hilights, dont forget to  Z index
 
     add rectangles to array
-    make draw rectangle function for square hilight
-    make mouseclick function approx clicks to the nearest square/ square they're in then trigger square draw/hilight
-    make square hilight remove function
+    make draw rectangle function for square highlight
+    make mouseclick function approx clicks to the nearest square/ square they're in then trigger square draw/highlight
+    make square highlight remove function
     figure out why vm isnt working
     add number draw functionality
     import sudoku gen
@@ -233,8 +242,8 @@
     ARRAY
     json array
     [{
-        "Square!":{"gridNumber":1,"points":[{"x":0,"y":0},{"x":100,"y":0},{"x":100,"y":100},{"x":0,"y":100}],"currentValue":1,"CorrectValue":9},
-        "Square2":{"gridNumber":5,"points":[{"x":100,"y":100},{"x":200,"y":100},{"x":200,"y":200},{"x":100,"y":200}],"currentValue":1,"CorrectValue":9},
+        "Square!":{"gridNumber":1,"points":[{"x":0,"y":0},{"x":100,"y":0},{"x":100,"y":100},{"x":0,"y":100}],"currentValue":1,"correctValue":9},
+        "Square2":{"gridNumber":5,"points":[{"x":100,"y":100},{"x":200,"y":100},{"x":200,"y":200},{"x":100,"y":200}],"currentValue":1,"correctValue":9},
     }]
 
 
@@ -251,7 +260,7 @@
             {"x":0,"y":100}
         ]},
         "currentValue":1,
-        "CorrectValue":9
+        "correctValue":9
     }]
      */
 
@@ -343,8 +352,8 @@
         //toggleHilight(getSquare(mouseX,mouseY));
         
         gridSquares.forEach(square => {
-            if ((square.hilighted==true)&&(square!=clickedSquare)) {
-                square.hilighted=false;
+            if ((square.highlighted==true)&&(square!=clickedSquare)) {
+                square.highlighted=false;
             }
         });
 
@@ -385,7 +394,11 @@
     }
 
     function toggleHilight(square){
-        square.hilighted=!square.hilighted;
+        if (square.editable){
+        square.highlighted=!square.highlighted;
+        }else{
+            console.log("square isn't editable")
+        }
     }
 
     function draw(){
@@ -393,7 +406,7 @@
         
         
         gridSquares.forEach(square => {
-            if (square.hilighted) {
+            if (square.highlighted) {
                 hilightSquare(square);
             }else{
                 clearSquare(square);
@@ -405,8 +418,43 @@
         initCanvas();
 
         fillNumbers();
+        checkComplete();
 
         //do numbers
+    }
+
+    document.addEventListener("keydown", function(event){
+        var inputNumber;
+        
+        
+        if ((event.keyCode>=49)&&(event.keyCode<=57)) {
+            inputNumber=event.keyCode-48;
+            console.log("input num"+inputNumber);
+            gridSquares.forEach(square => {
+                if (square.highlighted) {
+                   square.currentValue=inputNumber;
+                   draw();
+                }
+            });
+            
+        }
+    })
+
+    function getValuesAsString(){
+        var numbers= gridSquares.map(function (square){return square.currentValue;});
+        console.log("nums: ", numbers);
+        return numbers.join("");
+    }
+
+    function checkComplete(){
+        var values=getValuesAsString();
+        console.log("outputting current then true values");
+        console.log(values);
+        console.log(filledSudokku);
+        if (values==filledSudokku) {
+            alert("CONGRATULATIONS");
+        }
+        
     }
 
     
