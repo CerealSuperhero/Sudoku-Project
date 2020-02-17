@@ -45,7 +45,19 @@
 
     function init() {
 
-
+        var QueryString=window.location.search;
+        var urlParams= new URLSearchParams(QueryString);
+        var newEmpty= urlParams.get("MT");
+        var newFilled= urlParams.get("FILL")
+        console.log("checking url for params");
+        console.log("MT",newEmpty);
+        console.log("fill",newFilled);
+        if((newEmpty!= null)&&(newFilled!=null)){
+            console.log("updating to match params");
+            
+            emptysudoku=newEmpty;
+            filledSudokku=newFilled;
+        }
 
         /* for (var i = 0; i<20;i++){
             outPut[i]="top Left= "+ w[wcount] + ", " + h[hcount];
@@ -63,7 +75,7 @@
         for (var i = 0; i < 81; i++) {
             outPut[i] = "top Left= " + w[wcount] + ", " + h[hcount];
 
-            console.log(outPut[i]);
+                    //console.log(outPut[i]);
             if (emptysudoku[i] == 0) {
                 gridSquares[i] = { "gridNumber": i, "tl": [w[wcount], h[hcount]], "currentValue": emptysudoku[i], "correctValue": filledSudokku[i], "highlighted": false, "editable": true }
             } else {
@@ -73,7 +85,7 @@
             /* gridSquares[
             {"gridNumber": 5,"tl":[100,100],"x":[100,200], "y":[100,200], "currentValue": 0, "correctValue": 9 ,"highlighted":false }
             ] */
-            console.table(gridSquares[i])
+                    //console.table(gridSquares[i])
             itCount();
         }
 
@@ -85,7 +97,7 @@
         // consider making fill only encoded blanks???
         var urlMT = btoa(emptysudoku);
         var urlFil = btoa(filledSudokku);
-        console.log(window.location.href + "?MT=" + urlMT + "&FIL=" + urlFil);
+        console.log(window.location.href + "?MT=" + urlMT + "&FILL=" + urlFil);
 
     }
     var filColour = "black"
@@ -356,7 +368,7 @@
         var mouseX = parseInt(e.clientX - offsetX);
         var mouseY = parseInt(e.clientY - offsetY - topBarHeight);
 
-        console.log("clicked!", "x:" + mouseX, "y:" + mouseY);
+                //console.log("clicked!", "x:" + mouseX, "y:" + mouseY);
 
         /* if (mouseX<300) {
             toggleHilight(gridSquares[0]);
@@ -477,15 +489,15 @@
 
     function getValuesAsString() {
         var numbers = gridSquares.map(function(square) { return square.currentValue; });
-        console.log("nums: ", numbers);
+                //console.log("nums: ", numbers);
         return numbers.join("");
     }
 
     function checkComplete() {
         var values = getValuesAsString();
-        console.log("outputting current then true values");
+        /* console.log("outputting current then true values");
         console.log(values);
-        console.log(filledSudokku);
+        console.log(filledSudokku); */
         if (values == filledSudokku) {
             alert("CONGRATULATIONS");
         }
