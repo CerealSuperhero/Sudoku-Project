@@ -2,12 +2,23 @@
 <ion-view view-title="Sudoku">
     <ion-content class="has-header">
         <canvas id="myCanvas" width="900" height="900" style="border:1px solid #d3d3d3;"></canvas>
-       
+
         <!-- <p>{{vm.working}}!!</p> -->
+        <!-- THIS IS THE REAL ONE -->
         <button ng-click="vm.test()">{{vm.working}}</button>
+        <button ng-click="vm.share()">share this game with a friend!</button>
+        <h1 id="timer">00:00</h1>
+        <div id="ShareModal" class="modal">
+            <div class="modal__overlay jsOverlay"></div>
+            <div class="modal__container">
+                <p>Game link coppied to clipboard</p>
+            </div>
+        </div>
+
         <!-- <game-directive></game-directive> -->
     </ion-content>
-    
-    
+
+
 </ion-view>
+
 <!-- </div> -->
