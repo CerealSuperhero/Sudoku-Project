@@ -8,7 +8,8 @@
     control.$inject = [
         '$state',
         '$scope',
-        '$rootScope'
+        '$rootScope',
+        'winService'
     ];
     var vm = [];
 
@@ -16,7 +17,8 @@
     function control(
         $state,
         $scope,
-        $rootScope
+        $rootScope,
+        winService
 
     ) {
         var vm = angular.extend(this, {
@@ -52,6 +54,7 @@
             document.body.removeChild(el); */
 
             clearInterval(ticking);
+            console.log(winService.test());
             //complete = true;
             console.log("ALIVE");
 
