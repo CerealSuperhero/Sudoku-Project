@@ -54,12 +54,18 @@
             document.body.removeChild(el); */
 
             clearInterval(ticking);
-            console.log(winService.test());
+            //console.log(winService.makeArray(filledSudokku));
+            //console.log(winService.checkWin(invalidSudokku));
+            console.log(winService.checkWin(filledSudokku));
             //complete = true;
             console.log("ALIVE");
 
 
         }
+
+        var invalidSudokku = "111111111111111111111112567859761423426853791713924856961537284287419635345286179";
+        //var invalidSudokku = "534678912672195348198342567859761423426853791713924856961537284287419635345286179";
+
 
 
 
@@ -493,7 +499,7 @@
             initCanvas();
 
             fillNumbers();
-            checkComplete();
+            
 
             //do numbers
         }
@@ -530,6 +536,8 @@
                 });
             }
 
+            checkComplete();
+
         })
 
         function getValuesAsString() {
@@ -543,9 +551,16 @@
             /* console.log("outputting current then true values");
             console.log(values);
             console.log(filledSudokku); */
-            if (values == filledSudokku) {
+
+
+            /* if (values == filledSudokku) {
                 alert("CONGRATULATIONS");
-            }
+            } */
+
+            console.log("checking for win",values);
+            console.log("win?",winService.checkWin(values));
+
+
 
         }
 
