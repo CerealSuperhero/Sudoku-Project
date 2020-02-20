@@ -9,7 +9,8 @@
         '$state',
         '$scope',
         '$rootScope',
-        'winService'
+        'winService',
+        'genService'
     ];
     var vm = [];
 
@@ -18,7 +19,8 @@
         $state,
         $scope,
         $rootScope,
-        winService
+        winService,
+        genService
 
     ) {
         var vm = angular.extend(this, {
@@ -53,13 +55,16 @@
             document.execCommand('copy');
             document.body.removeChild(el); */
 
-            clearInterval(ticking);
+            //clearInterval(ticking);
             //console.log(winService.makeArray(filledSudokku));
             //console.log(winService.checkWin(invalidSudokku));
-            console.log(winService.checkWin(filledSudokku));
+            //console.log(winService.checkWin(filledSudokku));
             //complete = true;
             console.log("ALIVE");
 
+            console.log(genService.test());
+            console.log(genService.generateSudoku());
+            
 
         }
 
@@ -77,74 +82,71 @@
         //for complete clearInterval(ticking);
         // TODO: Error Handling
 
+        var generationPromise= new Promise (function (resolve, reject){
+            var newSudoku=genService.generateSudoku();
+            
+            resolve(newSudoku);
+            /* newFilled=newSudoku[0];
+            newEmpty=newSudoku[1]; */
+        })
+
 
 
         function init() {
-            complete = false;
-            var QueryString = window.location.href;
-            if (QueryString.includes("?")) {
-                var b = QueryString.split("?");
-                var c = b[1].split("=");
-                var newEmpty = atob(c[1].split("&")[0]);
-                var newFilled = atob(c[2]);
-                console.log(newEmpty);
-                console.log(newFilled);
-                if ((newEmpty != null) && (newFilled != null)) {
-                    console.log("updating to match params");
+            /* var newSudoku=genService.generateSudoku();
+            newFilled=newSudoku[0];
+            newEmpty=newSudoku[1]; */
 
-                    emptysudoku = newEmpty;
-                    filledSudokku = newFilled;
-                }
-            } else { console.log("newGame") }
-            /* var urlParams = new URLSearchParams(QueryString);
-            var newEmpty = urlParams.get("MT");
-            var newFilled = urlParams.get("FILL")
-            console.log("checking url for params");
-            console.log("MT", newEmpty);
-            console.log("fill", newFilled); */
+            generationPromise.then(function (newPuzzle) {
+
+                console.log("NEW PUZZLE",newPuzzle);
+                filledSudokku=newPuzzle[0];
+                emptysudoku=newPuzzle[1];
+
+                complete = false;
+                var QueryString = window.location.href;
+                if (QueryString.includes("?")) {
+                    var b = QueryString.split("?");
+                    var c = b[1].split("=");
+                    var newEmpty = atob(c[1].split("&")[0]);
+                    var newFilled = atob(c[2]);
+                    console.log(newEmpty);
+                    console.log(newFilled);
+                    if ((newEmpty != null) && (newFilled != null)) {
+                        console.log("updating to match params");
+
+                        emptysudoku = newEmpty;
+                        filledSudokku = newFilled;
+                    }
+                } else { console.log("newGame") }
 
 
-            /* for (var i = 0; i<20;i++){
-                outPut[i]="top Left= "+ w[wcount] + ", " + h[hcount];
-                itCount();
-                console.log(outPut[i]);
-              } */
+                for (var i = 0; i < 81; i++) {
+                    outPut[i] = "top Left= " + w[wcount] + ", " + h[hcount];
 
-            /* var w=[0,100,200,300,400,500,600,700,800,900];
-            var h = [0,100,200,300,400,500,600,700,800,900];
-            var hcount=0;
-            var wcount=0;
-            var outPut = [];
-            var gridSquares=[]; */
 
-            for (var i = 0; i < 81; i++) {
-                outPut[i] = "top Left= " + w[wcount] + ", " + h[hcount];
+                    if (emptysudoku[i] == 0) {
+                        gridSquares[i] = { "gridNumber": i, "tl": [w[wcount], h[hcount]], "currentValue": emptysudoku[i], "correctValue": filledSudokku[i], "highlighted": false, "editable": true }
+                    } else {
+                        gridSquares[i] = { "gridNumber": i, "tl": [w[wcount], h[hcount]], "currentValue": filledSudokku[i], "correctValue": filledSudokku[i], "highlighted": false, "editable": false }
+                    }
 
-                //console.log(outPut[i]);
-                if (emptysudoku[i] == 0) {
-                    gridSquares[i] = { "gridNumber": i, "tl": [w[wcount], h[hcount]], "currentValue": emptysudoku[i], "correctValue": filledSudokku[i], "highlighted": false, "editable": true }
-                } else {
-                    gridSquares[i] = { "gridNumber": i, "tl": [w[wcount], h[hcount]], "currentValue": filledSudokku[i], "correctValue": filledSudokku[i], "highlighted": false, "editable": false }
+
+                    itCount();
                 }
 
-                /* gridSquares[
-                {"gridNumber": 5,"tl":[100,100],"x":[100,200], "y":[100,200], "currentValue": 0, "correctValue": 9 ,"highlighted":false }
-                ] */
-                //console.table(gridSquares[i])
-                itCount();
-            }
 
 
 
 
+                startCanvas();
+                // consider making fill only encoded blanks???
+                var urlMT = btoa(emptysudoku);
+                var urlFil = btoa(filledSudokku);
+                console.log(window.location.href + "?MT=" + urlMT + "&FILL=" + urlFil);
 
-            startCanvas();
-            // consider making fill only encoded blanks???
-            var urlMT = btoa(emptysudoku);
-            var urlFil = btoa(filledSudokku);
-            console.log(window.location.href + "?MT=" + urlMT + "&FILL=" + urlFil);
-
-            //var timer=document.getElementById("timer");
+                //var timer=document.getElementById("timer");
+            });
 
 
         }
@@ -187,6 +189,7 @@
 
         var emptysudoku = "530070000600195000098000060800060003400803001700020006060000280000419005000080079";
         var filledSudokku = "534678912672195348198342567859761423426853791713924856961537284287419635345286179";
+        //"534679912672195348198342567859761423426853791713924856961537284287419635345286179";
 
         function itCount() {
             if (wcount == 8) {
@@ -515,6 +518,7 @@
                     if (square.highlighted) {
                         square.currentValue = inputNumber + "";
                         draw();
+                        checkComplete();
                     }
                 });
 
@@ -525,6 +529,7 @@
                     if (square.highlighted) {
                         square.currentValue = inputNumber + "";
                         draw();
+                        checkComplete();
                     }
                 });
             } else if (event.keyCode == 8 || event.keyCode == 46) {
@@ -536,7 +541,7 @@
                 });
             }
 
-            checkComplete();
+            //checkComplete();
 
         })
 
@@ -548,19 +553,18 @@
 
         function checkComplete() {
             var values = getValuesAsString();
-            /* console.log("outputting current then true values");
-            console.log(values);
-            console.log(filledSudokku); */
+            if (!values.includes(0)) {
+                console.log("checking for win", values);
+                console.log("win?", winService.checkWin(values));
+                if (winService.checkWin(values)) {
+                    win();
+                }
+            }
+        }
 
-
-            /* if (values == filledSudokku) {
-                alert("CONGRATULATIONS");
-            } */
-
-            console.log("checking for win",values);
-            console.log("win?",winService.checkWin(values));
-
-
+        function win(){
+            clearInterval(ticking);
+            alert("CONGRATULATIONS");
 
         }
 
@@ -568,7 +572,7 @@
             console.log("share");
             var str = window.location.href
             if (!str.includes("?")) {
-                str += "?MT=" + emptysudoku + "&FILL=" + filledSudokku;
+                str += "?MT=" + btoa(emptysudoku) + "&FILL=" + btoa(filledSudokku);
             }
             /* var str = window.location.href + "?MT=" + emptysudoku + "&FILL=" + filledSudokku; */
             var el = document.createElement('textarea');

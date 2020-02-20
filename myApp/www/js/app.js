@@ -7,6 +7,7 @@
 angular.module('starter', ['ionic', 'starter.controllers',
 'sudoku',
 'sudokuWinService',
+'sudokuGenService',
 'game.directive'
 ])
 
