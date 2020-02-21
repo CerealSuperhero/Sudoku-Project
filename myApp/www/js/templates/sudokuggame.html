@@ -6,7 +6,7 @@
         <!-- <p>{{vm.working}}!!</p> -->
         <!-- THIS IS THE REAL ONE -->
         <button ng-click="vm.test()">{{vm.working}}</button>
-        <button ng-click="vm.share()">share this game with a friend!</button>
+        <button id="shareButton" class="button icon-left ion-share button-balanced" ng-click="vm.share()">share this game</button>
         <h1 id="timer">00:00</h1>
         <div id="ShareModal" class="modal">
             <div class="modal__overlay jsOverlay"></div>

@@ -607,6 +607,7 @@
         //timer stuff
         var seconds = 0;
         var minutes = 0;
+        var hours = 0;
         var ticking;
 
         function startTimer() {
@@ -621,8 +622,11 @@
             if (seconds > 59) {
                 seconds = 0;
                 minutes++;
+                if (minutes>59) {
+                    hours++;
+                }
             }
-            timer.textContent = (minutes > 9 ? minutes : "0" + minutes) + ":" + (seconds > 9 ? seconds : "0" + seconds);
+            timer.textContent = (hours > 9 ? hours : "0" + hours) + ":" + (minutes > 9 ? minutes : "0" + minutes) + ":" + (seconds > 9 ? seconds : "0" + seconds);
         };
 
 

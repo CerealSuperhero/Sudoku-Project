@@ -43,6 +43,21 @@
     text-align: center;
 }
 
+#timer{
+    position: absolute;
+    top: 0%;
+    left: 910px;
+}
+
+#shareButton{
+    position: absolute;
+    top: 10%;
+    left: 910px;
+    max-width: 120px;
+    max-height: 81px;
+    line-height: 20px;
+}
+
 .modal {
     position: fixed;
     top: 0;
