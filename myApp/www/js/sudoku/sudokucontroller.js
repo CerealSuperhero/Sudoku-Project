@@ -467,7 +467,16 @@
         // });
 
         function handleCanvasClick(e) {
-            var scrollheight= document.getElementsByClassName("scroll")[0].style.transform.split("(")[1].split(",")[1].split("p")[0];
+            var scrollheight=0;
+            for (var i=0;i<document.getElementsByClassName("scroll").length;i++) {
+                if (document.getElementsByClassName("scroll")[i].innerText.includes("Easy")) {
+                    scrollheight=document.getElementsByClassName("scroll")[i].style.transform.split("(")[1].split(",")[1].split("p")[0];
+                    console.log("update scroll");
+                    
+                }
+                
+            }
+            //var scrollheight= document.getElementsByClassName("scroll")[0].style.transform.split("(")[1].split(",")[1].split("p")[0];
             var canvas = document.getElementById("myCanvas");
             var offsetX = canvas.offsetLeft;
             var offsetY = canvas.offsetTop;
@@ -476,9 +485,9 @@
             var topBar = document.getElementsByClassName("bar-stable bar bar-header");
             var topBarHeight = topBar[0].offsetHeight;
             var mouseX = parseInt(e.clientX - offsetX);
-            var mouseY = parseInt(e.clientY - offsetY - topBarHeight -scrollheight);
+            var mouseY = parseInt(e.clientY - offsetY - topBarHeight - parseInt(scrollheight));
 
-            //console.log("clicked!", "x:" + mouseX, "y:" + mouseY);
+            console.log("clicked!", "x:" + mouseX, "y:" + mouseY, "scroll= "+scrollheight);
 
             /* if (mouseX<300) {
                 toggleHilight(gridSquares[0]);
