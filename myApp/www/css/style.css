@@ -42,6 +42,14 @@
     padding-bottom: 0%;
     text-align: center;
 }
+#difficultyDiv{
+    position: absolute;
+    top: 18%;
+    left: 910px;
+}
+#difficultyDiv .button{
+    margin: 5px;
+}
 
 #timer{
     position: absolute;

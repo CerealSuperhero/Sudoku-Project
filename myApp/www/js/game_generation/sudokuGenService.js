@@ -27,7 +27,13 @@ angular.module('sudokuGenService', [])
         var VLines = [[1, 4, 7, 31, 34, 37, 61, 64, 67], [2, 5, 8, 32, 35, 38, 62, 65, 68], [3, 6, 9, 33, 36, 39, 63, 66, 69],
         [11, 14, 17, 41, 44, 47, 71, 74, 77], [12, 15, 18, 42, 45, 48, 72, 75, 78], [13, 16, 19, 43, 46, 49, 73, 76, 79],
         [21, 24, 27, 51, 54, 57, 81, 84, 87], [22, 25, 28, 52, 55, 58, 82, 85, 88], [23, 26, 29, 53, 56, 59, 83, 86, 89]];
-        this.generateSudoku = function () {
+
+        var numCellsToClear=10;
+
+        this.makeEasy=function(){}
+
+        this.generateSudoku = function (inputCellsToClear) {
+            numCellsToClear=inputCellsToClear;
             for (var i = 0; i <= 89; i++) {
                 if (i % 10 != 0) {
                     var thisGrid;
@@ -55,10 +61,11 @@ angular.module('sudokuGenService', [])
 
             }
             var consoleTableTry = [];
+            sudokuAsString = [];
             fillDoku();
             printDouku(dummydoku);
             //console.table(dummydoku);
-            clearCells(20, dummydoku);
+            clearCells(numCellsToClear, dummydoku);
             console.time("delcheck");
             deleteCheck(dummydoku, cellsToClear);
             console.timeEnd("delcheck");

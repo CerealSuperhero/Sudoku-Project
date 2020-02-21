@@ -6,13 +6,20 @@
         <!-- <p>{{vm.working}}!!</p> -->
         <!-- THIS IS THE REAL ONE -->
         <button ng-click="vm.test()">{{vm.working}}</button>
-        <button id="shareButton" class="button icon-left ion-share button-balanced" ng-click="vm.share()">share this game</button>
+        <button id="shareButton" class="button icon-left ion-share button-positive" ng-click="vm.share()">share this game</button>
         <h1 id="timer">00:00</h1>
         <div id="ShareModal" class="modal">
             <div class="modal__overlay jsOverlay"></div>
             <div class="modal__container">
                 <p>Game link coppied to clipboard</p>
             </div>
+        </div>
+
+        <div id="difficultyDiv">
+            <p>Select Difficulty</p>
+            <button id="easy" class="button button-balanced" ng-click="vm.changeDifficulty(1)">Easy</button>
+            <button id="medium" class="button button-energized" ng-click="vm.changeDifficulty(2)">Medium</button>
+            <button id="hard" class="button button-assertive" ng-click="vm.changeDifficulty(3)">Hard</button>
         </div>
 
         <!-- <game-directive></game-directive> -->

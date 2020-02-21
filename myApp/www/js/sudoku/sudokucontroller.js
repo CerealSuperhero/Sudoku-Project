@@ -64,6 +64,7 @@
 
             console.log(genService.test());
             console.log(genService.generateSudoku());
+            resetTimer();
             
 
         }
@@ -82,20 +83,65 @@
         //for complete clearInterval(ticking);
         // TODO: Error Handling
 
-        var generationPromise= new Promise (function (resolve, reject){
-            var newSudoku=genService.generateSudoku();
+        /* var generationPromise= new Promise (function (resolve, reject){
+            console.log("toClear",cellsToClear);
+            
+            var newSudoku=genService.generateSudoku(cellsToClear);
             
             resolve(newSudoku);
-            /* newFilled=newSudoku[0];
-            newEmpty=newSudoku[1]; */
-        })
+            
+        }) */
 
+        var difficulty=1;
+        var cellsToClear=10;
+        var cavasStarted=false;
 
+        vm.changeDifficulty=function(newDifficulty){
+            clearInterval(ticking);
+            difficulty=newDifficulty;
+            gridSquares.forEach(square => {
+                    square.highlighted=false;
+                    square.currentValue = 0 + "";
+                    draw();
+            });
+            resetTimer();
+            init();
+            draw();
+        }
 
         function init() {
             /* var newSudoku=genService.generateSudoku();
             newFilled=newSudoku[0];
             newEmpty=newSudoku[1]; */
+            hcount = 0;
+            wcount = 0;
+
+            switch (difficulty) {
+                case 1:
+                    cellsToClear=10;
+                    break;
+                case 2:
+                    cellsToClear=15;
+                    break;
+                case 3:
+                    cellsToClear=20;
+                    break;
+            
+                default:
+                    cellsToClear=10;
+                    break;
+            }
+
+            var generationPromise= new Promise (function (resolve, reject){
+                console.log("toClear",cellsToClear);
+                
+                var newSudoku=genService.generateSudoku(cellsToClear);
+                
+                resolve(newSudoku);
+                
+            })
+
+
 
             generationPromise.then(function (newPuzzle) {
 
@@ -138,8 +184,14 @@
 
 
 
-
-                startCanvas();
+                if (!cavasStarted) {
+                    startCanvas();    
+                }else{
+                    initCanvas();
+                    timer = document.getElementById("timer");
+                    startTimer();
+                }
+                
                 // consider making fill only encoded blanks???
                 var urlMT = btoa(emptysudoku);
                 var urlFil = btoa(filledSudokku);
@@ -216,7 +268,8 @@
         function hilightSquare(gridSquare) {
 
             /* if (!gridSquare.editable) { */
-
+                //console.log("HILIGHTsQUARE",gridSquare);
+                
 
 
 
@@ -347,6 +400,7 @@
          */
 
         function startCanvas() {
+            cavasStarted=true;
             if (document.getElementById("myCanvas")) {
                 if (document.getElementById("myCanvas").getContext("2d")) {
 
@@ -431,6 +485,8 @@
             var clickedSquare = null;
             clickedSquare = getSquare(mouseX, mouseY);
             if (clickedSquare != null) {
+               // console.log("toggle hilight for",clickedSquare);
+                
                 toggleHilight(clickedSquare);
             }
             //toggleHilight(getSquare(mouseX,mouseY));
@@ -459,6 +515,8 @@
                 var maxX = square.tl[0] + size;
                 var maxY = square.tl[1] + size;
 
+                //console.log("!!!!",square.tl,x,y,((minX < x) && (x < maxX) && (minY < y) && (y < maxY)));
+                
 
 
                 if ((minX < x) && (x < maxX) && (minY < y) && (y < maxY)) {
@@ -478,11 +536,17 @@
         }
 
         function toggleHilight(square) {
+           // console.log("in toggle for",square);
+            
             if (square.editable) {
+               // console.log("toggling",square);
+                
                 square.highlighted = !square.highlighted;
             } else {
-                console.log("square isn't editable")
+                console.log("square isn't editable",square)
             }
+            //console.log("done toggle=",square);
+            
         }
 
         function draw() {
@@ -491,6 +555,8 @@
 
             gridSquares.forEach(square => {
                 if (square.highlighted) {
+                    //console.log("calling hilight on",square);
+                    
                     hilightSquare(square);
                 } else {
                     clearSquare(square);
@@ -513,7 +579,7 @@
 
             if ((event.keyCode >= 49) && (event.keyCode <= 57)) {
                 inputNumber = event.keyCode - 48;
-                console.log("input num" + inputNumber);
+                console.log("input num: " + inputNumber);
                 gridSquares.forEach(square => {
                     if (square.highlighted) {
                         square.currentValue = inputNumber + "";
@@ -524,7 +590,7 @@
 
             } else if ((event.keyCode >= 97) && (event.keyCode <= 105)) {
                 inputNumber = event.keyCode - 96;
-                console.log("input num" + inputNumber);
+                console.log("input num: " + inputNumber);
                 gridSquares.forEach(square => {
                     if (square.highlighted) {
                         square.currentValue = inputNumber + "";
@@ -609,6 +675,12 @@
         var minutes = 0;
         var hours = 0;
         var ticking;
+
+        function resetTimer() {
+            seconds = 0;
+            minutes = 0;
+            hours = 0;
+        }
 
         function startTimer() {
 
