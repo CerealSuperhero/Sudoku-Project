@@ -41,42 +41,7 @@ angular.module('starter', ['ionic', 'starter.controllers',
     controller: 'AppCtrl'
   })
 
-  /* .state('app.search', {
-    url: '/search',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/search.html'
-      }
-    }
-  })
-
-  .state('app.browse', {
-      url: '/browse',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/browse.html'
-        }
-      }
-    }) */
-    /* .state('app.playlists', {
-      url: '/playlists',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/playlists.html',
-          controller: 'PlaylistsCtrl'
-        }
-      }
-    })
-
-  .state('app.single', {
-    url: '/playlists/:playlistId',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/playlist.html',
-        controller: 'PlaylistCtrl'
-      }
-    }
-  }) */
+  
   .state('app.about', {
     url: '/about',
     views: {
@@ -88,32 +53,14 @@ angular.module('starter', ['ionic', 'starter.controllers',
   
   .state('app.sudoku', {
     cache: 'false',
-    url: '/sudoku',
-    //templateUrl: 'templates/sudoku.html',
-    /* templateUrl: 'templates/sudoku.html',
-        controller: 'sudokucontroller as vm', */
+    url: '/sudoku',    
     views: {
       'menuContent': {
         templateUrl: 'templates/sudoku.html',
-       /*  controller: 'sudokucontroller',
-        controllerAs: 'vm',
-        bindToController: true */
-        //controller: 'sudokucontroller as vm'
-        
-        //controller: 'js/sudoku/sudokucontroller.js'
+       
       }
     },
-    /* controllerAs: 'vm',
-    bindToController: true */
-
   });
-
-
-
-
-
-
-
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/sudoku');

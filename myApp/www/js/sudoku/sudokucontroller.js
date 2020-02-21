@@ -27,76 +27,34 @@
             aaa: "AAA",
             time:"",
         });
-
-        vm.working = "print grid to console";
-        //$scope.workingg="print grid to console";
-
-        vm.test = function() {
-            //console.log("aaaaaaaaa");
-            //alert("test");
-            //ctx.font= "30px Arial";
-            //ctx.fillText("1",50,50);
-            //console.log(gridSquares);
-
-            /*   var str = "";
-
-              var urlMT = btoa(emptysudoku);
-              var urlFil = btoa(filledSudokku);
-              if (window.location.href.includes("?")) {
-                  console.log(window.location.href);
-              } else {
-                  console.log(window.location.href + "?MT=" + urlMT + "&FILL=" + urlFil);
-              } */
-
-            /* str = window.location.href + "?MT=" + emptysudoku + "&FILL=" + filledSudokku;
-            var el = document.createElement('textarea');
-            el.value = str;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el); */
-
-            //clearInterval(ticking);
-            //console.log(winService.makeArray(filledSudokku));
-            //console.log(winService.checkWin(invalidSudokku));
-            //console.log(winService.checkWin(filledSudokku));
-            //complete = true;
-            console.log("ALIVE");
-
-            console.log(genService.test());
-            console.log(genService.generateSudoku());
-            resetTimer();
-            
-
-        }
-
-        var invalidSudokku = "111111111111111111111112567859761423426853791713924856961537284287419635345286179";
-        //var invalidSudokku = "534678912672195348198342567859761423426853791713924856961537284287419635345286179";
+        //initialise variables for first run
+        var difficulty=1;   //game difficulty
+        var cellsToClear=10;    //for game difficulty
+        var cavasStarted=false; //to prevent double canvas init
 
 
+        var timer; //timer
+        var filColour = "black"//colour to use to draw numbers
 
+        //variables for init
+        var w = [0, 100, 200, 300, 400, 500, 600, 700, 800];
+        var h = [0, 100, 200, 300, 400, 500, 600, 700, 800];
+        var hcount = 0;
+        var wcount = 0;
+        var outPut = [];
+        var gridSquares = [];
+        //default game used for testing
+        var emptysudoku = "530070000600195000098000060800060003400803001700020006060000280000419005000080079";
+        var filledSudokku = "534678912672195348198342567859761423426853791713924856961537284287419635345286179";
 
-        console.log("ALIVE");
+        //canvas value
+        var canvas;
+        var ctx;
 
+        //used for future scaling
+        var size = 100;
 
-
-        var complete;
-        //for complete clearInterval(ticking);
-        // TODO: Error Handling
-
-        /* var generationPromise= new Promise (function (resolve, reject){
-            console.log("toClear",cellsToClear);
-            
-            var newSudoku=genService.generateSudoku(cellsToClear);
-            
-            resolve(newSudoku);
-            
-        }) */
-
-        var difficulty=1;
-        var cellsToClear=10;
-        var cavasStarted=false;
-
+        //takes in the variable passed by the button and re-runs the init with a puzzle of a new difficulty
         vm.changeDifficulty=function(newDifficulty){
             clearInterval(ticking);
             difficulty=newDifficulty;
@@ -110,13 +68,12 @@
             draw();
         }
 
+        //draws and populates grid 
         function init() {
-            /* var newSudoku=genService.generateSudoku();
-            newFilled=newSudoku[0];
-            newEmpty=newSudoku[1]; */
+
             hcount = 0;
             wcount = 0;
-
+            //changes the number of cells that will be empty depending on the difficulty
             switch (difficulty) {
                 case 1:
                     cellsToClear=10;
@@ -132,7 +89,7 @@
                     cellsToClear=10;
                     break;
             }
-
+            //promise returns an array containing playable and full sudoku grids as strings
             var generationPromise= new Promise (function (resolve, reject){
                 console.log("toClear",cellsToClear);
                 
@@ -143,14 +100,14 @@
             })
 
 
-
+            //upon promise return build playable sudoku string into gridSquare objects
             generationPromise.then(function (newPuzzle) {
 
                 console.log("NEW PUZZLE",newPuzzle);
                 filledSudokku=newPuzzle[0];
                 emptysudoku=newPuzzle[1];
 
-                complete = false;
+                //retrieves the game from the url if ther is one
                 var QueryString = window.location.href;
                 if (QueryString.includes("?")) {
                     var b = QueryString.split("?");
@@ -167,7 +124,7 @@
                     }
                 } else { console.log("newGame") }
 
-
+                //loops over the game string creating a gridSquare object for each one
                 for (var i = 0; i < 81; i++) {
                     outPut[i] = "top Left= " + w[wcount] + ", " + h[hcount];
 
@@ -178,13 +135,13 @@
                         gridSquares[i] = { "gridNumber": i, "tl": [w[wcount], h[hcount]], "currentValue": filledSudokku[i], "correctValue": filledSudokku[i], "highlighted": false, "editable": false }
                     }
 
-
+                    //iterates the count
                     itCount();
                 }
 
 
 
-
+                //if the canvas has not been started run startcanvas, otherwise run initCanvas and startTimer
                 if (!cavasStarted) {
                     startCanvas();    
                 }else{
@@ -193,31 +150,21 @@
                     startTimer();
                 }
                 
-                // consider making fill only encoded blanks???
+                //encode the currnet game and log a shareable game url in the console
                 var urlMT = btoa(emptysudoku);
                 var urlFil = btoa(filledSudokku);
                 console.log(window.location.href + "?MT=" + urlMT + "&FILL=" + urlFil);
 
-                //var timer=document.getElementById("timer");
+                
             });
 
 
         }
-        var timer;
-        var filColour = "black"
-
+        
+        //loops over the gridsquare array filling in the numbers of all the squares that have a current value
         function fillNumbers() {
             ctx.font = "30px Arial";
-            //ctx.fillStyle = filColour;
-            //ctx.fillText("5",40,60);
-            /*  gridSquares.forEach(square => {
-                 if (square.currentValue != 0) {
-                     ctx.fillText(square.currentValue, square.tl[0] + 40, square.tl[1] + 60)
-                 }
-
-             }); */
-
-
+            //draws if the number are given and grey if they are user entered
             for (var i = 0; i < gridSquares.length; i++) {
                 if (gridSquares[i].currentValue != 0) {
                     if (emptysudoku[i] != 0) {
@@ -232,18 +179,8 @@
             }
             filColour = "grey";
         }
-        //change to run off size
-        var w = [0, 100, 200, 300, 400, 500, 600, 700, 800];
-        var h = [0, 100, 200, 300, 400, 500, 600, 700, 800];
-        var hcount = 0;
-        var wcount = 0;
-        var outPut = [];
-        var gridSquares = [];
 
-        var emptysudoku = "530070000600195000098000060800060003400803001700020006060000280000419005000080079";
-        var filledSudokku = "534678912672195348198342567859761423426853791713924856961537284287419635345286179";
-        //"534679912672195348198342567859761423426853791713924856961537284287419635345286179";
-
+        //itterates the pointers on H and W for the grid generation
         function itCount() {
             if (wcount == 8) {
                 wcount = 0;
@@ -252,46 +189,20 @@
                 wcount++;
             }
         }
-        var canvas;
-        var ctx;
 
-        /* var gridSquares = [
-            {"gridNumber": 1, "points": [{ "x": 0, "y": 2 }, { "x": 100, "y": 2 }, { "x": 100, "y": 100 }, { "x": 0, "y": 100 }], "currentValue": 1, "correctValue": 9, "highlighted":false },
-            {"gridNumber": 5, "points": [{ "x": 100, "y": 100 }, { "x": 200, "y": 100 }, { "x": 200, "y": 200 }, { "x": 100, "y": 200 }], "currentValue": 1, "correctValue": 9 ,"highlighted":false },
-        ] */
-
-        /*     var gridSquares = [
-                {"gridNumber": 1,"tl":[0,0], "currentValue": 1, "correctValue": 9, "highlighted":false },
-                {"gridNumber": 5,"tl":[100,100],  "currentValue": 1, "correctValue": 9 ,"highlighted":false },
-            ]; */
-        var size = 100;
-
+        //hilights the background of a clicked square if the square is editable by the user
         function hilightSquare(gridSquare) {
 
-            /* if (!gridSquare.editable) { */
-                //console.log("HILIGHTsQUARE",gridSquare);
-                
-
-
-
             var points = [];
-            /*          points[0]= { x:gridSquare.x[0], "y": gridSquare.y[0] }
-                     points[1]= { x:gridSquare.x[1], "y": gridSquare.y[0] }
-                     points[2]= { x:gridSquare.x[1], "y": gridSquare.y[1] }
-                     points[3]= { x:gridSquare.x[0], "y": gridSquare.y[1] } */
-
             var minX = gridSquare.tl[0];
             var minY = gridSquare.tl[1];
-
+            //calculates the corners of the square
             points[0] = { x: minX, "y": minY }
             points[1] = { x: minX + size, "y": minY }
             points[2] = { x: minX + size, "y": minY + size }
             points[3] = { x: minX, "y": minY + size }
 
-
-
-
-
+            //draws a square and fills it in to colour the background
             ctx.fillStyle = "skyblue";
             ctx.strokeStyle = "black";
             ctx.lineWidth = 1;
@@ -305,32 +216,10 @@
             ctx.stroke();
 
             ctx.closePath();
-            /* }else{
-                console.error("can't edit this square")
-            } */
+
         }
 
-        /*     function hilightSquare(gridSquare) {
-                var points = gridSquare.points;
-                 points[0]= { x:gridSquare.x[0], "y": gridSquare.y[0] }
-                 points[1]= { x:gridSquare.x[1], "y": gridSquare.y[0] }
-                 points[2]= { x:gridSquare.x[1], "y": gridSquare.y[1] }
-                 points[3]= { x:gridSquare.x[0], "y": gridSquare.y[1] }
-                ctx.fillStyle = "skyblue";
-                ctx.strokeStyle = "black";
-                ctx.lineWidth=1;
-                ctx.beginPath();
-                ctx.moveTo(points[0].x, points[0].y);
-                for (var i = 1; i < points.length; i++) {
-                    ctx.lineTo(points[i].x, points[i].y);
-                }
-                ctx.lineTo(points[0].x, points[0].y);
-                ctx.fill();
-                ctx.stroke();
-
-                ctx.closePath();
-            } */
-
+        //like hilight but cleares the square instead of filling it
         function clearSquare(gridSquare) {
             var points = [];
 
@@ -355,78 +244,42 @@
             ctx.fill();
             ctx.stroke();
 
-            //add code to redraw number here
-
             ctx.closePath();
         }
-        /*
-        CONSIDER ATHOL'S METHOD OF HAVING THE GRID LINES GO AROUND THE SQUARES SO FILL +CLEAR DOESN'T DELDETE GRID LINE
-        ^^doesn't work, just stack 2 canvases with the background one for the grid and the foreground for numbers and hilights, dont forget to  Z index
-
-        add rectangles to array
-        make draw rectangle function for square highlight
-        make mouseclick function approx clicks to the nearest square/ square they're in then trigger square draw/highlight
-        make square highlight remove function
-        figure out why vm isnt working
-        add number draw functionality
-        import sudoku gen
-        make sudoku gen number backgrounds a different colo
-        put gen numbers into canvas
-        */
-
-        /*
-        ARRAY
-        json array
-        [{
-            "Square!":{"gridNumber":1,"points":[{"x":0,"y":0},{"x":100,"y":0},{"x":100,"y":100},{"x":0,"y":100}],"currentValue":1,"correctValue":9},
-            "Square2":{"gridNumber":5,"points":[{"x":100,"y":100},{"x":200,"y":100},{"x":200,"y":200},{"x":100,"y":200}],"currentValue":1,"correctValue":9},
-        }]
 
 
 
-
-
-        expanded
-        [{
-            "gridNumber":1,
-            "points"[
-                {"x":0,"y":0},
-                {"x":100,"y":0},
-                {"x":100,"y":100},
-                {"x":0,"y":100}
-            ]},
-            "currentValue":1,
-            "correctValue":9
-        }]
-         */
-
+        //tries to find the canvas, runs repeatedly every 10ms until the the canvas is found
         function startCanvas() {
             cavasStarted=true;
             if (document.getElementById("myCanvas")) {
                 if (document.getElementById("myCanvas").getContext("2d")) {
-
+                    //sets click event listener
                     document.getElementById("myCanvas").addEventListener('click', (e) => {
-                        //console.log('clicked',e);
+                        
                         handleCanvasClick(e);
                     })
+                    //sets canvas and ctx
                     canvas = document.getElementById("myCanvas");
                     ctx = canvas.getContext("2d");
-
-
-
+                    //draws the grid in the canvas
                     initCanvas();
+                    //sets timer to be the timer element
                     timer = document.getElementById("timer");
+                    //starts the timer
                     startTimer();
                 }
 
 
             } else {
+                //calls self until the canvas context can be found
                 setTimeout(() => {
                     startCanvas();
                 }, 10);
             }
         }
 
+        //draws the horizontal and vertical lines on the canvas
         function initCanvas() {
             var c = document.getElementById("myCanvas");
             ctx = c.getContext("2d");
@@ -462,12 +315,11 @@
             fillNumbers();
         }
 
-        // document.getElementById("myCanvas").mousedown(function (e){
-        //     handleCanvasClick(e);
-        // });
 
+        //canvas click event
         function handleCanvasClick(e) {
             var scrollheight=0;
+            //changes the scrollheight to match scroll distance
             for (var i=0;i<document.getElementsByClassName("scroll").length;i++) {
                 if (document.getElementsByClassName("scroll")[i].innerText.includes("Easy")) {
                     scrollheight=document.getElementsByClassName("scroll")[i].style.transform.split("(")[1].split(",")[1].split("p")[0];
@@ -476,66 +328,56 @@
                 }
                 
             }
-            //var scrollheight= document.getElementsByClassName("scroll")[0].style.transform.split("(")[1].split(",")[1].split("p")[0];
+            
+            //determines the canvas position
             var canvas = document.getElementById("myCanvas");
             var offsetX = canvas.offsetLeft;
             var offsetY = canvas.offsetTop;
-            //get rid of this when move into new app
-            //consider adding  code for orizontal offset and vertical offset not ujst header bar
+            //gets the height of the top bar
             var topBar = document.getElementsByClassName("bar-stable bar bar-header");
             var topBarHeight = topBar[0].offsetHeight;
+            //calculates where on the canvas was clicked using mouse position and offsets
             var mouseX = parseInt(e.clientX - offsetX);
             var mouseY = parseInt(e.clientY - offsetY - topBarHeight - parseInt(scrollheight));
 
-            console.log("clicked!", "x:" + mouseX, "y:" + mouseY, "scroll= "+scrollheight);
 
-            /* if (mouseX<300) {
-                toggleHilight(gridSquares[0]);
-                
-            } */
             var clickedSquare = null;
+            //searches for the square that was clicked
             clickedSquare = getSquare(mouseX, mouseY);
             if (clickedSquare != null) {
-               // console.log("toggle hilight for",clickedSquare);
-                
+                //if a square was clicked call toggleHilight on the square
                 toggleHilight(clickedSquare);
             }
-            //toggleHilight(getSquare(mouseX,mouseY));
-
+            
+            //removes highlight from all squares other than clicked square
             gridSquares.forEach(square => {
                 if ((square.highlighted == true) && (square != clickedSquare)) {
                     square.highlighted = false;
                 }
             });
-
-            draw()
+            //calls draw
+            draw();
 
 
         }
-
+        //returns a square based on x y coordinates
         function getSquare(x, y) {
             var clickedSquare = null;
+            //for every square calculate the area on the canvas it covers and make clicked square
+            //equal that square if the clicked point is within the square
             gridSquares.forEach(square => {
-                /*             var minX=square.x[0];
-                            var maxX=square.x[1];
-                            var minY=square.y[0];
-                            var maxY=square.y[1]; */
 
                 var minX = square.tl[0];
                 var minY = square.tl[1];
                 var maxX = square.tl[0] + size;
                 var maxY = square.tl[1] + size;
 
-                //console.log("!!!!",square.tl,x,y,((minX < x) && (x < maxX) && (minY < y) && (y < maxY)));
-                
-
-
                 if ((minX < x) && (x < maxX) && (minY < y) && (y < maxY)) {
                     clickedSquare = square;
 
                 }
             });
-
+            //if there isn't a clicked square throw an error, otherwise return the square
             if (clickedSquare != null) {
                 return clickedSquare;
             } else {
@@ -545,28 +387,25 @@
 
 
         }
-
+        //toggl the square's highlight
         function toggleHilight(square) {
-           // console.log("in toggle for",square);
+           
             
             if (square.editable) {
-               // console.log("toggling",square);
+               
                 
                 square.highlighted = !square.highlighted;
             } else {
                 console.log("square isn't editable",square)
             }
-            //console.log("done toggle=",square);
+            
             
         }
-
+        //draw function
         function draw() {
-
-
-
+            //higlight any squares that are supposed to be hilighted
             gridSquares.forEach(square => {
                 if (square.highlighted) {
-                    //console.log("calling hilight on",square);
                     
                     hilightSquare(square);
                 } else {
@@ -575,15 +414,19 @@
             });
 
 
-
+            //draw grid lines
             initCanvas();
-
+            //draw numbers
             fillNumbers();
             
 
-            //do numbers
         }
+        //event listner for keypress
+        //if a number (1-9) is pressed make the highlighted square's current value equal the pressed number
+        //then call draw() and check for completion
 
+        //if backspace or delete is pressed make the highlighted square's current value equal 0
+        //then call draw()
         document.addEventListener("keydown", function(event) {
             var inputNumber;
 
@@ -618,16 +461,18 @@
                 });
             }
 
-            //checkComplete();
 
         })
 
+        //returns the current values of all gridsquares as a string
         function getValuesAsString() {
             var numbers = gridSquares.map(function(square) { return square.currentValue; });
-            //console.log("nums: ", numbers);
+
             return numbers.join("");
         }
 
+        //gets the currentvalues as a string and sends them to the win service to check if the game has been won
+        //of the game is won call win()
         function checkComplete() {
             var values = getValuesAsString();
             if (!values.includes(0)) {
@@ -640,14 +485,14 @@
         }
 
       
-
+        //add the game as a sharable url to the clipboard and briefly display a modal explaining that the game has been added to the clipboard
         vm.share = function() {
             console.log("share");
             var str = window.location.href
             if (!str.includes("?")) {
                 str += "?MT=" + btoa(emptysudoku) + "&FILL=" + btoa(filledSudokku);
             }
-            /* var str = window.location.href + "?MT=" + emptysudoku + "&FILL=" + filledSudokku; */
+            
             var el = document.createElement('textarea');
             el.value = str;
             document.body.appendChild(el);
@@ -663,52 +508,53 @@
         }
 
         //modal stuff
-
+        //opens the share modal
         function openShareModal() {
             var modalWindow = document.getElementById("ShareModal");
 
             modalWindow.classList ? modalWindow.classList.add('open') : modalWindow.className += ' ' + 'open';
 
         };
-
+        //closes the share modal
         function closeModal() {
             var modalWindow = document.getElementById("ShareModal");
             modalWindow.classList ? modalWindow.classList.remove('open') : modalWindow.className = modalWindow.className.replace(new RegExp('(^|\\b)' + 'open'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
             modalWindow.classList ? modalWindow.classList.remove('open') : modalWindow.className = modalWindow.className.replace(new RegExp('(^|\\b)' + 'open'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
         }
 
-
+        //stops the timer and opens the win modal
         function win(){
             clearInterval(ticking);
-            //alert("CONGRATULATIONS");
+            
             openWinModal();
 
         }
-
+        //closes the win modal and starts a new game with a changed difficulty
         vm.winNewGame = function(newGameDifficulty){
             closeWinModal();
             vm.changeDifficulty(newGameDifficulty);
 
         }
-
+        //closes the win modal and calls vm.share()
         vm.winShare= function(){
             closeWinModal();
             vm.share();
         }
 
-
+        //opens win modal
         function openWinModal() {
             var modalWindow = document.getElementById("WinModal");
 
             modalWindow.classList ? modalWindow.classList.add('open') : modalWindow.className += ' ' + 'open';
 
         };
-
+        //closes win modal
         function closeWinModal() {
             var modalWindow = document.getElementById("WinModal");
             modalWindow.classList ? modalWindow.classList.remove('open') : modalWindow.className = modalWindow.className.replace(new RegExp('(^|\\b)' + 'open'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
             modalWindow.classList ? modalWindow.classList.remove('open') : modalWindow.className = modalWindow.className.replace(new RegExp('(^|\\b)' + 'open'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
         }
+        //closes win modal
         vm.closeWinModal=function() {
             var modalWindow = document.getElementById("WinModal");
             modalWindow.classList ? modalWindow.classList.remove('open') : modalWindow.className = modalWindow.className.replace(new RegExp('(^|\\b)' + 'open'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
@@ -716,24 +562,25 @@
         }
 
         //timer stuff
+        //variables for timer
         var seconds = 0;
         var minutes = 0;
         var hours = 0;
         var ticking;
-
+        //sets timer to 0
         function resetTimer() {
             seconds = 0;
             minutes = 0;
             hours = 0;
         }
-
+        //starts timer
         function startTimer() {
 
             ticking = setInterval(function() {
                 tick()
             }, 1000)
         };
-
+        //increases timer by 1 second
         function tick() {
             seconds++
             if (seconds > 59) {
@@ -746,20 +593,11 @@
             vm.time= (hours > 9 ? hours : "0" + hours) + ":" + (minutes > 9 ? minutes : "0" + minutes) + ":" + (seconds > 9 ? seconds : "0" + seconds);
             timer.textContent = vm.time;
             $scope.$apply();
-           /*  setTimeout(() => {
-                vm.time=vm.time;
-                $scope.$apply();
-            }, 0); */
+
         };
 
-        //vm.time="AAAA";
-
-
-
-
-
         init()
-            //return vm;
+            
 
     }
 })();
