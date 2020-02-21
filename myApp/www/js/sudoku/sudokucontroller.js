@@ -24,7 +24,8 @@
 
     ) {
         var vm = angular.extend(this, {
-            aaa: "AAA"
+            aaa: "AAA",
+            time:"",
         });
 
         vm.working = "print grid to console";
@@ -466,6 +467,7 @@
         // });
 
         function handleCanvasClick(e) {
+            var scrollheight= document.getElementsByClassName("scroll")[0].style.transform.split("(")[1].split(",")[1].split("p")[0];
             var canvas = document.getElementById("myCanvas");
             var offsetX = canvas.offsetLeft;
             var offsetY = canvas.offsetTop;
@@ -474,7 +476,7 @@
             var topBar = document.getElementsByClassName("bar-stable bar bar-header");
             var topBarHeight = topBar[0].offsetHeight;
             var mouseX = parseInt(e.clientX - offsetX);
-            var mouseY = parseInt(e.clientY - offsetY - topBarHeight);
+            var mouseY = parseInt(e.clientY - offsetY - topBarHeight -scrollheight);
 
             //console.log("clicked!", "x:" + mouseX, "y:" + mouseY);
 
@@ -628,11 +630,7 @@
             }
         }
 
-        function win(){
-            clearInterval(ticking);
-            alert("CONGRATULATIONS");
-
-        }
+      
 
         vm.share = function() {
             console.log("share");
@@ -670,6 +668,44 @@
             modalWindow.classList ? modalWindow.classList.remove('open') : modalWindow.className = modalWindow.className.replace(new RegExp('(^|\\b)' + 'open'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
         }
 
+
+        function win(){
+            clearInterval(ticking);
+            //alert("CONGRATULATIONS");
+            openWinModal();
+
+        }
+
+        vm.winNewGame = function(newGameDifficulty){
+            closeWinModal();
+            vm.changeDifficulty(newGameDifficulty);
+
+        }
+
+        vm.winShare= function(){
+            closeWinModal();
+            vm.share();
+        }
+
+
+        function openWinModal() {
+            var modalWindow = document.getElementById("WinModal");
+
+            modalWindow.classList ? modalWindow.classList.add('open') : modalWindow.className += ' ' + 'open';
+
+        };
+
+        function closeWinModal() {
+            var modalWindow = document.getElementById("WinModal");
+            modalWindow.classList ? modalWindow.classList.remove('open') : modalWindow.className = modalWindow.className.replace(new RegExp('(^|\\b)' + 'open'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+            modalWindow.classList ? modalWindow.classList.remove('open') : modalWindow.className = modalWindow.className.replace(new RegExp('(^|\\b)' + 'open'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+        }
+        vm.closeWinModal=function() {
+            var modalWindow = document.getElementById("WinModal");
+            modalWindow.classList ? modalWindow.classList.remove('open') : modalWindow.className = modalWindow.className.replace(new RegExp('(^|\\b)' + 'open'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+            modalWindow.classList ? modalWindow.classList.remove('open') : modalWindow.className = modalWindow.className.replace(new RegExp('(^|\\b)' + 'open'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+        }
+
         //timer stuff
         var seconds = 0;
         var minutes = 0;
@@ -698,9 +734,16 @@
                     hours++;
                 }
             }
-            timer.textContent = (hours > 9 ? hours : "0" + hours) + ":" + (minutes > 9 ? minutes : "0" + minutes) + ":" + (seconds > 9 ? seconds : "0" + seconds);
+            vm.time= (hours > 9 ? hours : "0" + hours) + ":" + (minutes > 9 ? minutes : "0" + minutes) + ":" + (seconds > 9 ? seconds : "0" + seconds);
+            timer.textContent = vm.time;
+            $scope.$apply();
+           /*  setTimeout(() => {
+                vm.time=vm.time;
+                $scope.$apply();
+            }, 0); */
         };
 
+        //vm.time="AAAA";
 
 
 

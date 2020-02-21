@@ -263,7 +263,7 @@ angular.module('sudokuGenService', [])
 
         function deleteCheck(checkDoku, positions) {
             for (var i = 0; i < positions.length; i++) {
-                checkDoku[positions[i]].value = -99;
+                checkDoku[positions[i]].value = 0;
                 checkDoku[positions[i]].toTry = [1, 2, 3, 4, 5, 6, 7, 8, 9];
             }
             recurCheckStarter(checkDoku);

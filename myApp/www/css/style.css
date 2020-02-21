@@ -51,6 +51,12 @@
     margin: 5px;
 }
 
+#closeWinModalButton{
+    position: absolute;
+    right: 0%;
+    top: 0%;
+}
+
 #timer{
     position: absolute;
     top: 0%;

@@ -15,8 +15,20 @@
             </div>
         </div>
 
+        <div id="WinModal" class="modal">
+            <div class="modal__overlay jsOverlay"></div>
+            <div class="modal__container">
+                <button id="closeWinModalButton" class="button button-icon icon ion-close-circled" ng-click=vm.closeWinModal()></button>
+                <p>Congratulations, you completed the sudoku in<span> {{vm.time}} </span> ! select a difficulty to play again or share with a friend to see if they can beat your time</p>
+                <button id="easy" class="button button-balanced" ng-click="vm.winNewGame(1)">Easy</button>
+                <button id="medium" class="button button-energized" ng-click="vm.winNewGame(2)">Medium</button>
+                <button id="hard" class="button button-assertive" ng-click="vm.winNewGame(3)">Hard</button>
+                <button id="winShareButton" class="button icon-left ion-share button-positive" ng-click="vm.winShare()">share this game</button>
+            </div>
+        </div>
+
         <div id="difficultyDiv">
-            <p>Select Difficulty</p>
+            <p>Select Difficulty{{vm.time}}</p>
             <button id="easy" class="button button-balanced" ng-click="vm.changeDifficulty(1)">Easy</button>
             <button id="medium" class="button button-energized" ng-click="vm.changeDifficulty(2)">Medium</button>
             <button id="hard" class="button button-assertive" ng-click="vm.changeDifficulty(3)">Hard</button>
